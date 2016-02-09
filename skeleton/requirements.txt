@@ -1,0 +1,8 @@
+
+###### Requirements without Version Specifiers ######
+unittest
+random
+timeit
+#
+#### memory_profiler ###
+--index-url https://pypi.python.org/pypi/memory_profiler
