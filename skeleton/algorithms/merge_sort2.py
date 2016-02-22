@@ -1,3 +1,7 @@
+from .memory_decorator import profiles
+
+
+@profiles
 def merge_sort2(A):
     B = list(range(0, len(A)))
     split_merge(A, 0, len(A), B)

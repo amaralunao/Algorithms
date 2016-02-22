@@ -1,17 +1,12 @@
-import copy
 import timeit
+
+
+def profiling():
+    setup = '''
 from algorithms.merge_sort_slow import merge_sort_slow
-from . import lists
-
-
-test_list = copy.copy(lists.huge_list)
-
-
-def time():
-        print('merge_sort_slow time is:',
-              timeit.repeat("merge_sort_slow(test_list)",
-                            number=3, globals=globals()))
-
-
-if __name__ == '__main__':
-    time()
+from __main__ import huge_list
+import copy
+huge = copy.copy(huge_list)
+    '''
+    print('merge_sort_slow time is:', timeit.timeit("merge_sort_slow(huge)",
+                                                    setup=setup, number=10))

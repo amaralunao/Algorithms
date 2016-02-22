@@ -1,3 +1,7 @@
+from .memory_decorator import profiles
+
+
+@profiles
 def insertion_sort(alist):
     for i in range(1, len(alist)):
         current = alist[i]

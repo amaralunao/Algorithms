@@ -1,24 +1,19 @@
 from sys import argv
 import random
+import os
 import importlib
-from tests.python_profiling import lists
-
-name, size = argv
-
-lists.huge_list = random.sample(range(0, int(size)), int(size))
 
 
 def load_time_memory():
+    all_files = os.listdir('tests/python_profiling')[2:]
     path = "tests.python_profiling."
-    names = ["bubble_memory", "bubble_time", "insertion_memory", "insertion_time",
-            "merge_memory_slow", "merge_memory2", "merge_time_slow", "merge_time2"]
-
-    for name in names:
-        if "_memory" in name:
-            print(importlib.import_module(path + name).memory())
-        else:
-            print(importlib.import_module(path + name).time())
+    module = importlib.import_module
+    for name in all_files:
+        name = name[:-3]
+        module(path+name).profiling()
 
 
 if __name__ == '__main__':
+    name, size = argv
+    huge_list = random.sample(range(0, int(size)), int(size))
     load_time_memory()
