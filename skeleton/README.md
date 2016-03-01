@@ -10,7 +10,8 @@ Sorting algorithms handled:
  script may be found under: '/algorithms/insertion_sort.py'
 * Merge Sort,
  script may be found under: '/algorithms/merge_sort.py'
-
+* Quick Sort,
+ script may be found under: '/algorithms/quick_sort.py'
 Tests handled:
 -------------
 
@@ -23,6 +24,7 @@ Tests handled:
 
 * scripts may be found under: 'tests/python_tests/' and
 * imported and used memory_profiler package
+* imported psutil package
 * imported and used timeit package
 * imported and used unittest package
 

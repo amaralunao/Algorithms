@@ -1,4 +1,7 @@
+from .memory_decorator import profiles
 
+
+@profiles
 def merge_sort_slow(alist):
     inputsize = len(alist)
     if inputsize <= 1:
