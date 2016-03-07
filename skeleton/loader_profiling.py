@@ -2,6 +2,7 @@ from sys import argv
 import random
 import os
 import importlib
+from algorithms.singly_list import Node, UnorderedList
 
 
 def load_time_memory():
@@ -15,5 +16,8 @@ def load_time_memory():
 
 if __name__ == '__main__':
     name, size = argv
-    huge_list = random.sample(range(0, int(size)), int(size))
+    random_list = random.sample(range(0, int(size)), int(size))
+    huge_list = UnorderedList()
+    for i in random_list:
+        huge_list.append(i)
     load_time_memory()
