@@ -39,7 +39,7 @@ class BSTTests(unittest.TestCase):
                          self.parent_both_BST.root.left.key)
 
     def test_insert_empty_BST(self):
-        self.assertTrue(self.empty_BST.insert(5, ))
+        self.assertTrue(self.empty_BST.insert(5))
         self.assertEqual(self.empty_BST.root.key, 5)
 
     def test_insert_right_parent_BST(self):

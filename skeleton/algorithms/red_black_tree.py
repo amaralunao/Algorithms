@@ -2,7 +2,6 @@ RED = "R"
 BLACK = "B"
 
 
-
 class RBNode:
     def __init__(self, key=None, color=RED, left=None, right=None, p=None):
 
@@ -19,6 +18,82 @@ class RBTree:
         self.sentinel = RBNode()
         self.sentinel.color = BLACK
         self.root = self.sentinel
+
+    def _find_iterative(self, current_node, key):
+        while current_node is not self.sentinel:
+
+            if key == current_node.key:
+                break
+
+            if key < current_node.key:
+                current_node = current_node.left
+            else:
+                current_node = current_node.right
+
+        if current_node is not self.sentinel:
+            return current_node
+        else:
+            raise KeyError("Key not found")
+
+    def rb_minimum(self, node):
+        while node.left is not self.sentinel:
+            node = node.left
+        return node
+
+    def rb_maximum(self, node):
+        while node.right is not self.sentinel:
+            node = node.right
+        return node
+
+    def rb_transplant(self, u, v):
+        if u.p == self.sentinel:
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+        v.p = u.p
+
+    def search(self, key):
+
+        current_node = self._find_iterative(self.root, key)
+        return key
+
+    def _preorder_generator(self, node):
+        if node is None:
+            return
+        yield node.key
+        if node.left is not self.sentinel:
+            yield from self._preorder_generator(node.left)
+        if node.right is not self.sentinel:
+            yield from self._preorder_generator(node.right)
+
+    def preorder(self):
+        yield from self._preorder_generator(self.root)
+
+    def _inorder_generator(self, node):
+        if node is None:
+            return
+        if node.left is not self.sentinel:
+            yield from self._inorder_generator(node.left)
+        yield node.key
+        if node.right is not self.sentinel:
+            yield from self._inorder_generator(node.right)
+
+    def inorder(self):
+        yield from self._inorder_generator(self.root)
+
+    def _postorder_generator(self, node):
+        if node is None:
+            return
+        if node.left is not self.sentinel:
+            yield from self._postorder_generator(node.left)
+        if node.right is not self.sentinel:
+            yield from self._postorder_generator(node.right)
+        yield node.key
+
+    def postorder(self):
+        yield from self._postorder_generator(self.root)
 
     def _print_tree_indented(self, node, level=0):
         if node is None:
@@ -120,8 +195,85 @@ class RBTree:
     def rb_insert(self, x):
         self._insert(x)
         self._rb_insert_fixup(x)
+        return True
 
-"""
+    def _rb_delete_fixup(self, x):
+        while x != self.root and x.color == BLACK:
+            if x == x.p.left:
+                w = x.p.right
+                if w.color == RED:
+                    w.color = BLACK
+                    x.p.color = RED
+                    self._left_rotate(x.p)
+                    w = x.p.right
+                if w.left.color == BLACK and w.right.color == BLACK:
+                    w.color = RED
+                    x = x.p
+                else:
+                    if w.right.color == BLACK:
+                        w.left.color = BLACK
+                        w.color = RED
+                        self._right_rotate(w)
+                        w = x.p.right
+                    w.color = x.p.color
+                    x.p.color = BLACK
+                    self._left_rotate(x.p)
+                    x = self.root
+            else:
+                w = x.p.left
+                if w.color == RED:
+                    w.color = BLACK
+                    x.p.color = RED
+                    self._rotate_right(x.p)
+                    w = x.p.left
+
+                if w.right.color == BLACK and w.left.color == BLACK:
+                    w.color = RED
+                    x = x.p
+                else:
+                    if w.left.color == BLACK:
+                        w.right.color = BLACK
+                        w.color = RED
+                        self._rotate_left(w)
+                        w = x.p.left
+
+                    w.color = x.p.color
+                    x.p.color = BLACK
+                    w.left.color = BLACK
+                    self._rotate_right(x.p)
+                    x = self.root
+
+        x.color = BLACK
+
+    def rb_delete(self, z):
+        if z is None or z == self.sentinel:
+            return
+        y = z
+        y_original_color = y.color
+        if z.left == self.sentinel:
+            x = z.right
+            self.rb_transplant(z, z.right)
+        elif z.right == self.sentinel:
+            x = z.left
+            self.rb_transplant(z, z.left)
+        else:
+            y = self.rb_minimum(z.right)
+            y_original_color = y.color
+            x = y.right
+            if y.p == z:
+                x.p = y
+            else:
+                self.rb_transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.rb_transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+            y.color = z.color
+        if y_original_color == BLACK:
+            self._rb_delete_fixup(x)
+
+
 five_right = RBTree()
 five_right.root = RBNode(3, BLACK)
 five_right.root.p = five_right.sentinel
@@ -145,7 +297,7 @@ five_left.rb_insert(RBNode(7))
 five_left.rb_insert(RBNode(3))
 five_left.rb_insert(RBNode(4))
 five_left.rb_insert(RBNode(2))
-five_left.rb_insert(RBNode(2))
+five_left.rb_insert(RBNode(9))
 
 # five_left.root = RBNode(5, BLACK)
 # five_left.root.p = five_left.sentinel
@@ -171,5 +323,11 @@ five_left.rb_insert(RBNode(2))
 #node = RBNode(9, RED)
 # print(node.key)
 #five_left.rb_insert(node)
+# five_left._print_tree_indented(five_left.root)
+five_left.rb_delete(five_left.root)
 five_left._print_tree_indented(five_left.root)
-"""
+# test_list = list(five_left.inorder())
+# print(test_list)
+# print(five_left.search(9))
+# test_list2 = list(five_left.postorder())
+# print(test_list2)
