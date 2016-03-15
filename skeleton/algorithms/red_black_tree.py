@@ -1,3 +1,4 @@
+import math
 RED = "R"
 BLACK = "B"
 
@@ -35,17 +36,35 @@ class RBTree:
         else:
             raise KeyError("Key not found")
 
-    def rb_minimum(self, node):
+    def _height(self, node):
+        if node == self.sentinel:
+            return 0
+        return max(1 + self._height(node.left), 1 + self._height(node.right))
+
+    def _node_count(self, node):
+        if node == self.sentinel:
+            return 0
+        return 1 + self._node_count(node.left) + self._node_count(node.right)
+
+    def is_height_correct(self): # Lemma 13.1 A red-black tree with n internal nodes has height at most 2lg(n+1), therefore the height of the root is O(log n).
+        def lg(x):
+            return math.log2(x)
+        if self._height(self.root) <= 2*lg(self._node_count(self.root) + 1):
+            return True
+        else:
+            return False
+
+    def _rb_minimum(self, node):
         while node.left is not self.sentinel:
             node = node.left
         return node
 
-    def rb_maximum(self, node):
+    def _rb_maximum(self, node):
         while node.right is not self.sentinel:
             node = node.right
         return node
 
-    def rb_transplant(self, u, v):
+    def _rb_transplant(self, u, v):
         if u.p == self.sentinel:
             self.root = v
         elif u == u.p.left:
@@ -224,7 +243,7 @@ class RBTree:
                 if w.color == RED:
                     w.color = BLACK
                     x.p.color = RED
-                    self._rotate_right(x.p)
+                    self._right_rotate(x.p)
                     w = x.p.left
 
                 if w.right.color == BLACK and w.left.color == BLACK:
@@ -234,13 +253,13 @@ class RBTree:
                     if w.left.color == BLACK:
                         w.right.color = BLACK
                         w.color = RED
-                        self._rotate_left(w)
+                        self._left_rotate(w)
                         w = x.p.left
 
                     w.color = x.p.color
                     x.p.color = BLACK
                     w.left.color = BLACK
-                    self._rotate_right(x.p)
+                    self._right_rotate(x.p)
                     x = self.root
 
         x.color = BLACK
@@ -252,27 +271,32 @@ class RBTree:
         y_original_color = y.color
         if z.left == self.sentinel:
             x = z.right
-            self.rb_transplant(z, z.right)
+            self._rb_transplant(z, z.right)
         elif z.right == self.sentinel:
             x = z.left
-            self.rb_transplant(z, z.left)
+            self._rb_transplant(z, z.left)
         else:
-            y = self.rb_minimum(z.right)
+            y = self._rb_minimum(z.right)
             y_original_color = y.color
             x = y.right
             if y.p == z:
                 x.p = y
             else:
-                self.rb_transplant(y, y.right)
+                self._rb_transplant(y, y.right)
                 y.right = z.right
                 y.right.p = y
-            self.rb_transplant(z, y)
+            self._rb_transplant(z, y)
             y.left = z.left
             y.left.p = y
             y.color = z.color
         if y_original_color == BLACK:
             self._rb_delete_fixup(x)
 
+    def delete(self, key):
+        node = self._find_iterative(self.root, key)
+        if node:
+            self.rb_delete(node)
+            return True
 
 five_right = RBTree()
 five_right.root = RBNode(3, BLACK)
@@ -292,13 +316,25 @@ five_right.root.right.left.p = five_right.root.right
 
 
 five_left = RBTree()
+five_left.rb_insert(RBNode(10))
 five_left.rb_insert(RBNode(5))
-five_left.rb_insert(RBNode(7))
-five_left.rb_insert(RBNode(3))
+five_left.rb_insert(RBNode(15))
 five_left.rb_insert(RBNode(4))
 five_left.rb_insert(RBNode(2))
-five_left.rb_insert(RBNode(9))
+five_left.rb_insert(RBNode(3))
+five_left.rb_insert(RBNode(20))
+five_left.rb_insert(RBNode(12))
+five_left.rb_insert(RBNode(11))
+five_left.rb_insert(RBNode(0))
+five_left.rb_insert(RBNode(1))
 
+five_left._print_tree_indented(five_left.root)
+five_left.delete(12)
+# five_left._print_tree_indented(five_left.root)
+print(five_left._node_count(five_left.root))
+
+print (five_left._height(five_left.root))
+print(five_left.is_height_correct())
 # five_left.root = RBNode(5, BLACK)
 # five_left.root.p = five_left.sentinel
 # five_left.root.right = RBNode(7, RED)
@@ -324,8 +360,8 @@ five_left.rb_insert(RBNode(9))
 # print(node.key)
 #five_left.rb_insert(node)
 # five_left._print_tree_indented(five_left.root)
-five_left.rb_delete(five_left.root)
-five_left._print_tree_indented(five_left.root)
+
+#five_left._print_tree_indented(five_left.root)
 # test_list = list(five_left.inorder())
 # print(test_list)
 # print(five_left.search(9))

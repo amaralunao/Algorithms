@@ -60,6 +60,15 @@ class RedBlackTest(unittest.TestCase):
         self.assertEqual(self.five_right.search(2),
                          self.five_right.root.left.key)
 
+    def test_is_height_correct_one(self):
+        self.assertTrue(self.one.is_height_correct())
+
+    def test_is_height_correct_five_left(self):
+        self.assertTrue(self.five_left.is_height_correct())
+
+    def test_is_height_correct_five_right(self):
+        self.assertTrue(self.five_right.is_height_correct())
+
     def test_rb_insert_empty(self):
         self.assertTrue(self.empty.rb_insert(RBNode(5)))
         self.assertEqual(self.empty.root.key, 5)
@@ -75,7 +84,7 @@ class RedBlackTest(unittest.TestCase):
         self.assertEqual(self.one.root.left.key, 3)
         self.assertEqual(self.one.root.left.color, RED)
 
-    def test_insert_case1_five_left(self):
+    def test_rb_insert_case1_five_left(self):
         self.assertTrue(self.five_left.rb_insert(RBNode(1)))
         self.assertEqual(self.five_left.root.left.left.left.key, 1)
         self.assertEqual(self.five_left.root.left.left.left.color, RED)
@@ -99,6 +108,49 @@ class RedBlackTest(unittest.TestCase):
         self.assertEqual(self.five_right.root.right.right.color, BLACK)
         self.assertEqual(self.five_right.root.right.right.key, 8)
 
+    def test_delete_empty(self):
+        with self.assertRaisesRegex(KeyError, "Key not found"):
+            self.one.delete(0)
+
+    def test_delete_case_1(self):
+        self.empty.rb_insert(RBNode(1))
+        self.empty.rb_insert(RBNode(2))
+        self.assertTrue(self.empty.delete(1))
+        self.assertEqual(self.empty.root.key, 2)
+        self.assertEqual(self.empty.root.color, BLACK)
+        self.assertTrue(self.empty.is_height_correct())
+
+    def test_delete_case_1_2_left(self):
+        nodes = [10, 15, 7, 8, 5, 6]
+        for key in nodes:
+            self.empty.rb_insert(RBNode(key))
+        self.assertTrue(self.empty.delete(15))
+        self.assertEqual(self.empty.root.color, BLACK)
+        self.assertTrue(self.empty.is_height_correct())
+
+    def test_delete_case_3_4_left(self):
+        nodes = [10, 15, 7, 8, 5, 6]
+        for key in nodes:
+            self.empty.rb_insert(RBNode(key))
+        self.assertTrue(self.empty.delete(7))
+        self.assertEqual(self.empty.root.color, BLACK)
+        self.assertTrue(self.empty.is_height_correct())
+
+    def test_delete_case_1_2_right(self):
+        nodes = [10, 9, 13, 11, 15, 12]
+        for key in nodes:
+            self.empty.rb_insert(RBNode(key))
+        self.assertTrue(self.empty.delete(9))
+        self.assertEqual(self.empty.root.color, BLACK)
+        self.assertTrue(self.empty.is_height_correct())
+
+    def test_delete_case_3_4_right(self):
+        nodes = [10, 9, 13, 11, 15, 12]
+        for key in nodes:
+            self.empty.rb_insert(RBNode(key))
+        self.assertTrue(self.empty.delete(10))
+        self.assertEqual(self.empty.root.color, BLACK)
+        self.assertTrue(self.empty.is_height_correct())
 
 
 if __name__ == '__main__':
