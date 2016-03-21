@@ -1,5 +1,15 @@
 import unittest
 from algorithms.red_black_tree import RBNode, RBTree, RED, BLACK
+import math
+
+
+def is_height_correct(tree):
+
+    if tree._height(tree.root) <= 2*math.log2(tree._node_count(tree.root) + 1):
+        return True
+    else:
+        return False
+
 
 class RedBlackTest(unittest.TestCase):
 
@@ -61,48 +71,48 @@ class RedBlackTest(unittest.TestCase):
                          self.five_right.root.left.key)
 
     def test_is_height_correct_one(self):
-        self.assertTrue(self.one.is_height_correct())
+        self.assertTrue(is_height_correct(self.one))
 
     def test_is_height_correct_five_left(self):
-        self.assertTrue(self.five_left.is_height_correct())
+        self.assertTrue(is_height_correct(self.five_left))
 
     def test_is_height_correct_five_right(self):
-        self.assertTrue(self.five_right.is_height_correct())
+        self.assertTrue(is_height_correct(self.five_right))
 
-    def test_rb_insert_empty(self):
-        self.assertTrue(self.empty.rb_insert(RBNode(5)))
+    def test_insert_empty(self):
+        self.assertTrue(self.empty.insert(5))
         self.assertEqual(self.empty.root.key, 5)
         self.assertEqual(self.empty.root.color, BLACK)
 
-    def test_rb_insert_right_one_BST(self):
-        self.assertTrue(self.one.rb_insert(RBNode(7)))
+    def test_insert_right_one_BST(self):
+        self.assertTrue(self.one.insert(7))
         self.assertEqual(self.one.root.right.key, 7)
         self.assertEqual(self.one.root.right.color, RED)
 
-    def test_rb_insert_left_one_BST(self):
-        self.assertTrue(self.one.rb_insert(RBNode(3)))
+    def test_insert_left_one_BST(self):
+        self.assertTrue(self.one.insert(3))
         self.assertEqual(self.one.root.left.key, 3)
         self.assertEqual(self.one.root.left.color, RED)
 
-    def test_rb_insert_case1_five_left(self):
-        self.assertTrue(self.five_left.rb_insert(RBNode(1)))
+    def test_insert_case1_five_left(self):
+        self.assertTrue(self.five_left.insert(1))
         self.assertEqual(self.five_left.root.left.left.left.key, 1)
         self.assertEqual(self.five_left.root.left.left.left.color, RED)
         self.assertEqual(self.five_left.root.color, BLACK)
         self.assertEqual(self.five_left.root.left.left.color, BLACK)
         self.assertEqual(self.five_left.root.left.right.color, BLACK)
 
-    def test_rb_insert_case3_five_left(self):
-        self.five_left.rb_insert(RBNode(1))
-        self.assertTrue(self.five_left.rb_insert(RBNode(0)))
+    def test_insert_case3_five_left(self):
+        self.five_left.insert(1)
+        self.assertTrue(self.five_left.insert(0))
         self.assertEqual(self.five_left.root.left.left.left.key, 0)
         self.assertEqual(self.five_left.root.left.left.left.color, RED)
         self.assertEqual(self.five_left.root.left.left.key, 1)
         self.assertEqual(self.five_left.root.left.left.color, BLACK)
 
-    def test_rb_insert_case2_five_right(self):
-        self.five_right.rb_insert(RBNode(8))
-        self.assertTrue(self.five_right.rb_insert(RBNode(9)))
+    def test_insert_case2_five_right(self):
+        self.five_right.insert(8)
+        self.assertTrue(self.five_right.insert(9))
         self.assertEqual(self.five_right.root.right.right.right.key, 9)
         self.assertEqual(self.five_right.root.right.right.right.color, RED)
         self.assertEqual(self.five_right.root.right.right.color, BLACK)
@@ -113,44 +123,44 @@ class RedBlackTest(unittest.TestCase):
             self.one.delete(0)
 
     def test_delete_case_1(self):
-        self.empty.rb_insert(RBNode(1))
-        self.empty.rb_insert(RBNode(2))
+        self.empty.insert(1)
+        self.empty.insert(2)
         self.assertTrue(self.empty.delete(1))
         self.assertEqual(self.empty.root.key, 2)
         self.assertEqual(self.empty.root.color, BLACK)
-        self.assertTrue(self.empty.is_height_correct())
+        self.assertTrue(is_height_correct(self.empty))
 
     def test_delete_case_1_2_left(self):
         nodes = [10, 15, 7, 8, 5, 6]
         for key in nodes:
-            self.empty.rb_insert(RBNode(key))
+            self.empty.insert(key)
         self.assertTrue(self.empty.delete(15))
         self.assertEqual(self.empty.root.color, BLACK)
-        self.assertTrue(self.empty.is_height_correct())
+        self.assertTrue(is_height_correct(self.empty))
 
     def test_delete_case_3_4_left(self):
         nodes = [10, 15, 7, 8, 5, 6]
         for key in nodes:
-            self.empty.rb_insert(RBNode(key))
+            self.empty.insert(key)
         self.assertTrue(self.empty.delete(7))
         self.assertEqual(self.empty.root.color, BLACK)
-        self.assertTrue(self.empty.is_height_correct())
+        self.assertTrue(is_height_correct(self.empty))
 
     def test_delete_case_1_2_right(self):
         nodes = [10, 9, 13, 11, 15, 12]
         for key in nodes:
-            self.empty.rb_insert(RBNode(key))
+            self.empty.insert(key)
         self.assertTrue(self.empty.delete(9))
         self.assertEqual(self.empty.root.color, BLACK)
-        self.assertTrue(self.empty.is_height_correct())
+        self.assertTrue(is_height_correct(self.empty))
 
     def test_delete_case_3_4_right(self):
         nodes = [10, 9, 13, 11, 15, 12]
         for key in nodes:
-            self.empty.rb_insert(RBNode(key))
+            self.empty.insert(key)
         self.assertTrue(self.empty.delete(10))
         self.assertEqual(self.empty.root.color, BLACK)
-        self.assertTrue(self.empty.is_height_correct())
+        self.assertTrue(is_height_correct(self.empty))
 
 
 if __name__ == '__main__':

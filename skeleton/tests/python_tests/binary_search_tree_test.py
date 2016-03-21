@@ -1,6 +1,7 @@
 import unittest
 from algorithms.binary_search_tree import BSTNode, BST
 
+
 class BSTTests(unittest.TestCase):
 
     def setUp(self):
@@ -49,10 +50,6 @@ class BSTTests(unittest.TestCase):
     def test_insert_left_parent_BST(self):
         self.assertTrue(self.parent_BST.insert(3))
         self.assertEqual(self.parent_BST.root.left.key, 3)
-
-    def test_insert_parent_both_BST_key_exists(self):
-        with self.assertRaisesRegex(KeyError, "They key already exists"):
-            self.parent_both_BST.insert(7)
 
     def test_delete_empty_BST(self):
         with self.assertRaisesRegex(KeyError, "Key not found"):

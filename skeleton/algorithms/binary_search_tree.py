@@ -1,3 +1,4 @@
+import random
 class BSTNode:
 
     def __init__(self, key, parent=None, left=None, right=None):
@@ -12,7 +13,6 @@ class BST:
 
     def __init__(self):
         self.root = None
-        self.list = []
 
     def __str__(self):
         return str(self.key)
@@ -83,7 +83,6 @@ class BST:
         return key
 
     def insert(self, key):
-
         if self.root is None:
             self.root = BSTNode(key)
             return True
@@ -108,18 +107,14 @@ class BST:
         return True
 
     def _replace_node(self, node, new_node):
-        if node == self.root:
+        if node.parent is None:
             self.root = new_node
-            return
-
-        parent = node.parent
-
-        if parent.left and parent.left == node:
-            parent.left = new_node
-        elif parent.right and parent.right == node:
-            parent.right = new_node
+        elif node.parent.left == node:
+            node.parent.left = new_node
         else:
-            raise RuntimeError("Incorrect parent-children relation!")
+            node.parent.right = new_node
+        if new_node:
+            new_node.parent = node.parent
 
     def _remove_node(self, node):
         if node.left and node.right:
