@@ -1,6 +1,7 @@
 import unittest
 from algorithms.red_black_tree import RBNode, RBTree, RED, BLACK
 import math
+import random
 
 
 def is_height_correct(tree):
@@ -162,6 +163,32 @@ class RedBlackTest(unittest.TestCase):
         self.assertEqual(self.empty.root.color, BLACK)
         self.assertTrue(is_height_correct(self.empty))
 
+    def test_delete_huge_list(self):
+        random_list = random.sample(range(0, 1000), 1000)
+        red_black_tree = RBTree()
+        for i in random_list:
+            red_black_tree.insert(i)
+        for i in random_list:
+            self.assertTrue(red_black_tree.delete(i))
+            self.assertTrue(is_height_correct(red_black_tree))
+        
+
+    def test_insert_huge_list(self):
+
+        random_list = random.sample(range(0, 1000), 1000)
+        red_black_tree = RBTree()
+        for i in random_list:
+            self.assertTrue(red_black_tree.insert(i))
+            self.assertEqual(red_black_tree.root.color, BLACK)
+            self.assertTrue(is_height_correct(red_black_tree))
+
+    def test_search_huge_list(self):
+        random_list = random.sample(range(0, 1000), 1000)
+        red_black_tree = RBTree()
+        for i in random_list:
+            red_black_tree.insert(i)
+        for i in random_list:
+            self.assertEqual(red_black_tree.search(i), i)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,4 @@
+import random
 import unittest
 from algorithms.binary_search_tree import BSTNode, BST
 
@@ -112,6 +113,29 @@ class BSTTests(unittest.TestCase):
         test_list = list(self.empty_BST.postorder())
         self.assertEqual(len(test_list), 0)
 
+    def test_delete_huge_list(self):
+        random_list = random.sample(range(0, 1000), 1000)
+        binary_tree = BST()
+        for i in random_list:
+            binary_tree.insert(i)
+        for i in random_list:
+            self.assertTrue(binary_tree.delete(i))
+        test_list = list(binary_tree.inorder())
+        self.assertEqual(len(test_list), 0)
+
+    def test_insert_huge_list(self):
+        random_list = random.sample(range(0, 1000), 1000)
+        binary_tree = BST()
+        for i in random_list:
+            self.assertTrue(binary_tree.insert(i))
+
+    def test_search_huge_list(self):
+        random_list = random.sample(range(0, 1000), 1000)
+        binary_tree = BST()
+        for i in random_list:
+            binary_tree.insert(i)
+        for i in random_list:
+            self.assertEqual(binary_tree.search(i), i)
 
 if __name__ == '__main__':
     unittest.main()
