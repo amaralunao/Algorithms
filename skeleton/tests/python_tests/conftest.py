@@ -163,3 +163,15 @@ def two_elements():
     two_elements._length = 2
     two_elements._tail = Node(2)
     return two_elements
+
+
+@pytest.fixture(scope="function", params=[empty_list(), one_list(), sorted_list()])
+def is_sorted(request):
+    param = request.param
+    cnt = 0
+    while cnt < len(param) - 1:
+        if param[cnt] < param[cnt+1]:
+            cnt += 1
+        else:
+            return False
+    return True
